@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Max Freezer - Configurador de Neveras</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: #f5f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .step {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 1.8em;
+            line-height: 1.4;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #34495e;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e4e8;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .btn-next {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-prev {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-submit {
+            background: #27ae60;
+            color: white;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .radio-option input {
+            display: none;
+        }
+
+        .radio-option label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 25px;
+            background: #f8f9fa;
+            border: 2px solid #e0e4e8;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 150px;
+            text-align: center;
+        }
+
+        .radio-option .icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            color: #3498db;
+            transition: color 0.3s;
+        }
+
+        .radio-option input:checked + label .icon {
+            color: #21618c;
+        }
+
+        .radio-option input:checked + label {
+            border-color: #3498db;
+            background: #e3f2fd;
+            transform: translateY(-2px);
+        }
+
+        .progress-bar {
+            display: flex;
+            margin-bottom: 30px;
+        }
+
+        .progress-step {
+            flex: 1;
+            height: 4px;
+            background: #e0e4e8;
+            margin: 0 2px;
+            border-radius: 2px;
+            transition: background 0.3s;
+        }
+
+        .progress-step.active {
+            background: #3498db;
+        }
+
+        .medidas-group {
+            display: grid;
+            gap: 15px;
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .medida-card {
+            padding: 20px;
+            border: 2px solid #e0e4e8;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .medida-card:hover {
+            border-color: #3498db;
+        }
+
+        .medida-card input:checked + label {
+            border-color: #3498db;
+            background: #e3f2fd;
+        }
+
+        .custom-measures {
+            display: none;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+
+        .custom-measures.active {
+            display: block;
+        }
+
+        .measure-inputs {
+            display: grid;
+            gap: 15px;
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .image-group {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .image-option {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .image-option input {
+            display: none;
+        }
+
+        .image-option label {
+            display: block;
+            border: 2px solid #e0e4e8;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .image-option img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 2px solid #e0e4e8;
+        }
+
+        .image-option .model-name {
+            padding: 15px;
+            text-align: center;
+            background: #f8f9fa;
+            font-weight: 500;
+        }
+
+        .image-option input:checked + label {
+            border-color: #3498db;
+            background: #e3f2fd;
+        }
+
+        .material-description {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-top: 10px;
+        }
+
+        .material-option label {
+            align-items: flex-start;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="progress-bar">
+            <div class="progress-step active"></div>
+            <div class="progress-step"></div>
+            <div class="progress-step"></div>
+            <div class="progress-step"></div>
+            <div class="progress-step"></div>
+        </div>
+
+        <!-- Paso 1 - Nombre -->
+        <div class="step active" id="step1">
+            <h2>Hola, soy Arnel Ospino<br>Asesor de Ventas de Max Freezer<br>¿Cuál es tu nombre?</h2>
+            <div class="input-group">
+                <input type="text" id="nombre" placeholder="Ingresa tu nombre completo" required>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn-next" onclick="nextStep(2)">Siguiente</button>
+            </div>
+        </div>
+
+        <!-- Paso 2 - Tipo de Nevera -->
+        <div class="step" id="step2">
+            <h2 id="step2-title"></h2>
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input type="radio" name="tipo" id="carniceria" value="Carnicería" required>
+                    <label for="carniceria">
+                        <i class="fas fa-drumstick-bite icon"></i>
+                        Carnicería
+                    </label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" name="tipo" id="charcuteria" value="Charcutería">
+                    <label for="charcuteria">
+                        <i class="fas fa-bacon icon"></i>
+                        Charcutería
+                    </label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" name="tipo" id="pasteleria" value="Pastelería">
+                    <label for="pasteleria">
+                        <i class="fas fa-birthday-cake icon"></i>
+                        Pastelería
+                    </label>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn-prev" onclick="prevStep(1)">Anterior</button>
+                <button type="button" class="btn-next" onclick="nextStep(3)">Siguiente</button>
+            </div>
+        </div>
+
+        <!-- Paso 3 - Medidas -->
+        <div class="step" id="step3">
+            <h2>Selecciona las medidas de tu nevera</h2>
+            <div class="medidas-group">
+                <div class="radio-option">
+                    <input type="radio" name="medida" id="medida1" value="100x115x80" onchange="toggleCustomMeasures(false)">
+                    <label for="medida1">
+                        <div class="medida-card">
+                            <h3>Modelo Estándar 1</h3>
+                            <p>100cm (Largo)<br>115cm (Alto)<br>80cm (Profundidad)</p>
+                        </div>
+                    </label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" name="medida" id="medida2" value="120x125x80" onchange="toggleCustomMeasures(false)">
+                    <label for="medida2">
+                        <div class="medida-card">
+                            <h3>Modelo Estándar 2</h3>
+                            <p>120cm (Largo)<br>125cm (Alto)<br>80cm (Profundidad)</p>
+                        </div>
+                    </label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" name="medida" id="medida3" value="150x125x80" onchange="toggleCustomMeasures(false)">
+                    <label for="medida3">
+                        <div class="medida-card">
+                            <h3>Modelo Grande</h3>
+                            <p>150cm (Largo)<br>125cm (Alto)<br>80cm (Profundidad)</p>
+                        </div>
+                    </label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" name="medida" id="custom" value="custom" onchange="toggleCustomMeasures(true)">
+                    <label for="custom">
+                        <div class="medida-card">
+                            <h3>Medidas Personalizadas</h3>
+                            <p>Especifica tus propias medidas</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <div class="custom-measures">
+                <div class="measure-inputs">
+                    <div class="input-group">
+                        <label>Largo (cm)</label>
+                        <input type="number" id="largo" min="50" max="300" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Alto (cm)</label>
+                        <input type="number" id="alto" min="50" max="200" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Profundidad (cm)</label>
+                        <input type="number" id="profundidad" min="50" max="150" required>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn-prev" onclick="prevStep(2)">Anterior</button>
+                <button type="button" class="btn-next" onclick="nextStep(4)">Siguiente</button>
+            </div>
+        </div>
+
+        <!-- Paso 4 - Modelo -->
+        <div class="step" id="step4">
+            <h2>Selecciona el diseño de tu nevera</h2>
+            <div class="image-group">
+                <div class="image-option">
+                    <input type="radio" name="modelo" id="curvo" value="Curvo" required>
+                    <label for="curvo">
+                        <img src="https://i.postimg.cc/QKt5g018/2.jpg" alt="Modelo Curvo">
+                        <div class="model-name">Modelo Curvo</div>
+                    </label>
+                </div>
+                <div class="image-option">
+                    <input type="radio" name="modelo" id="semicurvo" value="SemiCurvo">
+                    <label for="semicurvo">
+                        <img src="https://i.postimg.cc/7GX0TpCt/1.jpg" alt="Modelo SemiCurvo">
+                        <div class="model-name">Modelo SemiCurvo</div>
+                    </label>
+                </div>
+                <div class="image-option">
+                    <input type="radio" name="modelo" id="cuadrado" value="Cuadrado">
+                    <label for="cuadrado">
+                        <img src="https://i.postimg.cc/S2mcRyKz/3.jpg" alt="Modelo Cuadrado">
+                        <div class="model-name">Modelo Cuadrado</div>
+                    </label>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn-prev" onclick="prevStep(3)">Anterior</button>
+                <button type="button" class="btn-next" onclick="nextStep(5)">Siguiente</button>
+            </div>
+        </div>
+
+        <!-- Paso 5 - Materiales -->
+        <div class="step" id="step5">
+            <h2>Selecciona el material interior</h2>
+            <div class="radio-group">
+                <div class="radio-option material-option">
+                    <input type="radio" name="material" id="galvanizado" value="Acero Galvanizado" required>
+                    <label for="galvanizado">
+                        <i class="fas fa-shield-alt icon"></i>
+                        <h3>Acero Galvanizado</h3>
+                        <div class="material-description">
+                            Requiere limpieza constante con agua y vinagre para prevenir oxidación y bacterias
+                        </div>
+                    </label>
+                </div>
+                
+                <div class="radio-option material-option">
+                    <input type="radio" name="material" id="inoxidable" value="Acero Inoxidable">
+                    <label for="inoxidable">
+                        <i class="fas fa-stethoscope icon"></i>
+                        <h3>Acero Inoxidable</h3>
+                        <div class="material-description">
+                            Superficie lisa e higiénica, fácil mantenimiento y aspecto estético
+                        </div>
+                    </label>
+                </div>
+                
+                <div class="radio-option material-option">
+                    <input type="radio" name="material" id="pintura" value="Pintura Protectora Blanca">
+                    <label for="pintura">
+                        <i class="fas fa-paint-roller icon"></i>
+                        <h3>Pintura Protectora Blanca</h3>
+                        <div class="material-description">
+                            Fácil limpieza y mayor luminosidad interior
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn-prev" onclick="prevStep(4)">Anterior</button>
+                <button type="button" class="btn-submit" onclick="submitForm()">Enviar por WhatsApp</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateProgressBar(currentStep) {
+            const steps = document.querySelectorAll('.progress-step');
+            steps.forEach((step, index) => {
+                step.classList.toggle('active', index < currentStep);
+            });
+        }
+
+        function toggleCustomMeasures(show) {
+            const customMeasures = document.querySelector('.custom-measures');
+            const measureInputs = customMeasures.querySelectorAll('input');
+            
+            customMeasures.classList.toggle('active', show);
+            measureInputs.forEach(input => input.required = show);
+            
+            if(!show) {
+                measureInputs.forEach(input => input.value = '');
+            }
+        }
+
+        function nextStep(stepNumber) {
+            const currentStep = document.querySelector('.step.active');
+            let isValid = true;
+
+            switch(stepNumber) {
+                case 2:
+                    if(!document.getElementById('nombre').value) {
+                        alert('Por favor ingresa tu nombre');
+                        isValid = false;
+                    }
+                    break;
+                
+                case 3:
+                    if(!document.querySelector('input[name="tipo"]:checked')) {
+                        alert('Por favor selecciona un tipo de nevera');
+                        isValid = false;
+                    }
+                    break;
+                
+                case 4:
+                    const medida = document.querySelector('input[name="medida"]:checked');
+                    if(!medida) {
+                        alert('Por favor selecciona una medida');
+                        isValid = false;
+                    }
+                    if(medida && medida.value === 'custom') {
+                        const largo = document.getElementById('largo').value;
+                        const alto = document.getElementById('alto').value;
+                        const profundidad = document.getElementById('profundidad').value;
+                        if(!largo || !alto || !profundidad) {
+                            alert('Por favor completa todas las medidas personalizadas');
+                            isValid = false;
+                        }
+                    }
+                    break;
+                
+                case 5:
+                    if(!document.querySelector('input[name="modelo"]:checked')) {
+                        alert('Por favor selecciona un modelo');
+                        isValid = false;
+                    }
+                    break;
+            }
+
+            if(!isValid) return;
+
+            if(stepNumber === 2) {
+                const nombre = document.getElementById('nombre').value;
+                document.getElementById('step2-title').textContent = 
+                    `Hola ${nombre}, ¿qué tipo de nevera exhibidora necesitas?`;
+            }
+
+            currentStep.classList.remove('active');
+            document.getElementById(`step${stepNumber}`).classList.add('active');
+            updateProgressBar(stepNumber);
+        }
+
+        function prevStep(stepNumber) {
+            document.querySelector('.step.active').classList.remove('active');
+            document.getElementById(`step${stepNumber}`).classList.add('active');
+            updateProgressBar(stepNumber);
+        }
+
+        function submitForm() {
+            const tipo = document.querySelector('input[name="tipo"]:checked');
+            const medida = document.querySelector('input[name="medida"]:checked');
+            const modelo = document.querySelector('input[name="modelo"]:checked');
+            const material = document.querySelector('input[name="material"]:checked');
+
+            if(!tipo || !medida || !modelo || !material) {
+                alert('Por favor completa todos los campos');
+                return;
+            }
+
+            const data = {
+                nombre: document.getElementById('nombre').value,
+                tipo: tipo.value,
+                medidas: medida.value === 'custom' ? {
+                    largo: document.getElementById('largo').value,
+                    alto: document.getElementById('alto').value,
+                    profundidad: document.getElementById('profundidad').value
+                } : medida.value,
+                modelo: modelo.value,
+                material: material.value
+            };
+
+            let medidasStr = '';
+            if(data.medidas === 'custom') {
+                medidasStr = `Personalizadas:
+- Largo: ${data.medidas.largo}cm
+- Alto: ${data.medidas.alto}cm
+- Profundidad: ${data.medidas.profundidad}cm`;
+            } else {
+                medidasStr = data.medidas.replace('x', 'cm x').replace('x', 'cm x') + 'cm';
+            }
+
+            const mensaje = `*SOLICITUD DE NEVERA EXHIBIDORA - MAX FREEZER*
+
+👤 *Nombre:* ${data.nombre}
+📋 *Tipo de Nevera:* ${data.tipo}
+📏 *Medidas:* 
+${medidasStr}
+🎨 *Modelo:* ${data.modelo}
+🔩 *Material Interior:* ${data.material}
+
+*¡Gracias por tu solicitud, ${data.nombre}!*
+Arnel Ospino - Asesor Comercial
+📞 +58 412 8939324`;
+
+            const whatsappURL = `https://wa.me/584128939324?text=${encodeURIComponent(mensaje)}`;
+            window.open(whatsappURL, '_blank');
+
+            // Reiniciar formulario
+            document.querySelectorAll('input').forEach(input => {
+                if(input.type !== 'button') input.value = '';
+                if(input.type === 'radio' || input.type === 'checkbox') input.checked = false;
+            });
+            document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
+            document.getElementById('step1').classList.add('active');
+            updateProgressBar(1);
+        }
+    </script>
+</body>
+</html>
