@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Max Freezer - Configurador de Neveras</title>
+    <title>Max Freezer - Configurador Responsive</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
@@ -19,16 +19,17 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px;
         }
 
         .form-container {
             background: white;
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            padding: 40px;
+            padding: 25px;
             width: 100%;
             max-width: 800px;
+            margin: 15px;
         }
 
         .step {
@@ -42,20 +43,13 @@
 
         h2 {
             color: #2c3e50;
-            margin-bottom: 30px;
-            font-size: 1.8em;
+            margin-bottom: 25px;
+            font-size: 1.5em;
             line-height: 1.4;
         }
 
         .input-group {
-            margin-bottom: 25px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #34495e;
-            font-weight: 500;
+            margin-bottom: 20px;
         }
 
         input, select {
@@ -74,21 +68,20 @@
 
         .btn-group {
             display: flex;
-            gap: 15px;
-            margin-top: 30px;
+            gap: 12px;
+            margin-top: 25px;
+            flex-wrap: wrap;
         }
 
         button {
-            padding: 12px 30px;
+            padding: 12px 25px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 500;
             transition: all 0.3s;
-        }
-
-        button:active {
-            transform: scale(0.98);
+            flex: 1;
+            min-width: 120px;
         }
 
         .btn-next {
@@ -107,14 +100,13 @@
         }
 
         .radio-group {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
+            display: grid;
+            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         }
 
         .radio-option {
-            flex: 1;
-            min-width: 150px;
+            min-width: 0;
         }
 
         .radio-option input {
@@ -125,25 +117,20 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 25px;
+            padding: 20px;
             background: #f8f9fa;
             border: 2px solid #e0e4e8;
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s;
-            min-height: 150px;
             text-align: center;
+            min-height: 140px;
         }
 
         .radio-option .icon {
-            font-size: 2.5em;
-            margin-bottom: 15px;
+            font-size: 2em;
+            margin-bottom: 12px;
             color: #3498db;
-            transition: color 0.3s;
-        }
-
-        .radio-option input:checked + label .icon {
-            color: #21618c;
         }
 
         .radio-option input:checked + label {
@@ -154,14 +141,14 @@
 
         .progress-bar {
             display: flex;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
+            gap: 3px;
         }
 
         .progress-step {
             flex: 1;
             height: 4px;
             background: #e0e4e8;
-            margin: 0 2px;
             border-radius: 2px;
             transition: background 0.3s;
         }
@@ -173,24 +160,15 @@
         .medidas-group {
             display: grid;
             gap: 15px;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         }
 
         .medida-card {
-            padding: 20px;
+            padding: 18px;
             border: 2px solid #e0e4e8;
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s;
-        }
-
-        .medida-card:hover {
-            border-color: #3498db;
-        }
-
-        .medida-card input:checked + label {
-            border-color: #3498db;
-            background: #e3f2fd;
         }
 
         .custom-measures {
@@ -207,22 +185,13 @@
         .measure-inputs {
             display: grid;
             gap: 15px;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         }
 
         .image-group {
             display: grid;
-            gap: 20px;
-            grid-template-columns: repeat(3, 1fr);
-        }
-
-        .image-option {
-            flex: 1;
-            min-width: 180px;
-        }
-
-        .image-option input {
-            display: none;
+            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         }
 
         .image-option label {
@@ -236,7 +205,7 @@
 
         .image-option img {
             width: 100%;
-            height: 200px;
+            height: 180px;
             object-fit: cover;
             border-bottom: 2px solid #e0e4e8;
         }
@@ -248,24 +217,81 @@
             font-weight: 500;
         }
 
-        .image-option input:checked + label {
-            border-color: #3498db;
-            background: #e3f2fd;
-        }
-
         .material-description {
-            font-size: 0.9em;
+            font-size: 0.85em;
             color: #7f8c8d;
             margin-top: 10px;
-        }
-
-        .material-option label {
-            align-items: flex-start;
+            line-height: 1.4;
         }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateX(20px); }
             to { opacity: 1; transform: translateX(0); }
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 1.3em;
+                margin-bottom: 20px;
+            }
+
+            .radio-group, .image-group, .medidas-group {
+                grid-template-columns: 1fr;
+            }
+
+            .radio-option label {
+                min-height: auto;
+                padding: 15px;
+            }
+
+            .image-option img {
+                height: 150px;
+            }
+
+            button {
+                font-size: 14px;
+                padding: 10px 20px;
+            }
+
+            .measure-inputs {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .form-container {
+                padding: 15px;
+                border-radius: 12px;
+            }
+
+            h2 {
+                font-size: 1.2em;
+            }
+
+            .radio-option .icon {
+                font-size: 1.8em;
+            }
+
+            .image-option .model-name {
+                padding: 12px;
+                font-size: 0.9em;
+            }
+
+            .medida-card {
+                padding: 15px;
+            }
+
+            .progress-bar {
+                margin-bottom: 20px;
+            }
         }
     </style>
 </head>
@@ -431,7 +457,6 @@
                         </div>
                     </label>
                 </div>
-                
                 <div class="radio-option material-option">
                     <input type="radio" name="material" id="inoxidable" value="Acero Inoxidable">
                     <label for="inoxidable">
@@ -442,7 +467,6 @@
                         </div>
                     </label>
                 </div>
-                
                 <div class="radio-option material-option">
                     <input type="radio" name="material" id="pintura" value="Pintura Protectora Blanca">
                     <label for="pintura">
